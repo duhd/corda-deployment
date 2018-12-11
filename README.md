@@ -7,7 +7,7 @@ This is a repository for Project Ubin containing collection of scripts to set up
 
 To get started, clone this repository with:
 ```sh
-$ git clone https://github.com/project-ubin/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/ubin-corda-deployment.git
 ```
 # Set Up New Network
 
@@ -15,8 +15,17 @@ Note: Following steps have been tested in Ubuntu 16.04 LTS
 
 ## A. Pre-Requisites
 You will need the following components set up/installed:
+* Server lists: Hostname	  OS	  Cấu hình	  Site	  Listen Port
+1. Corda_NetworkMap	  Ubuntu (Xenial - LTS 16.04)	4 Core; 4 GB RAM; HDD 40GB	VNPAY	22;80;443;10002;10003;10004
+2. Corda_Notary	  Ubuntu (Xenial - LTS 16.04)	32 Core; 16 GB RAM; HDD 40GB	VNPAY	22;80;443;10002;10003;10005
+3. Corda_SBV	  Ubuntu (Xenial - LTS 16.04)	8 Core; 8 GB RAM; HDD 40GB	GDS	22;80;443;10002;10003;10006
+4. Corda_VNPAY	  Ubuntu (Xenial - LTS 16.04)	8 Core; 8 GB RAM; HDD 40GB	VNPAY	22;80;443;10002;10003;10007
+5. Codra_BankA	  Ubuntu (Xenial - LTS 16.04)	32 Core; 16 GB RAM; HDD 40GB	VNPAY	22;80;443;10002;10003;10008
+6. Codra_BankB	  Ubuntu (Xenial - LTS 16.04)	32 Core; 16 GB RAM; HDD 40GB	GDS	22;80;443;10002;10003;10009
+7. Codra_BankC	  Ubuntu (Xenial - LTS 16.04)	32 Core; 16 GB RAM; HDD 40GB	GDS	22;80;443;10002;10003;10010
+8. Corda_Operation	  Ubuntu (Xenial - LTS 16.04)	4 Core; 4 GB RAM; HDD 40GB	VNPAY	22;80;443;3128;
 
-* 15 Ubuntu (Xenial - LTS 16.04) VMs (11 banks, 1 MAS Central Bank node, 1 MAS as Regulator node, 1 Network Map, 1 Notary) with minimum specifications of 1 core, 3.5 GB RAM
+
 * [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
   installed and available on your path.
 * Git
@@ -39,7 +48,7 @@ The script `configure.sh` from `ubin-corda-deployment` repository takes in 5 inp
 
 2\. Clone `ubin-corda-deployment` repository
 ```sh
-$ git clone https://github.com/project-ubin/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/ubin-corda-deployment.git
 ```
 3\. Determine network map node name (e.q. Network Map)
 
@@ -56,10 +65,10 @@ $ sudo ./configure.sh networkmap <<VM Username>> <<Network Map Name>> nonValidat
 ```sh
 # Network map name is "Network Map"
 # Network map IP address is "10.0.0.47"
-# VM username is "azureuser"
+# VM username is "corda"
 
 chmod +x configure.sh
-sudo ./configure.sh networkmap azureuser "Network Map" nonValidating 10.0.0.47
+sudo ./configure.sh networkmap corda "Network Map" nonValidating 10.0.0.47
 ```
 
 Note: Network map IP address is required in the set up of notary node and additional bank nodes
@@ -71,7 +80,7 @@ Note: Network map IP address is required in the set up of notary node and additi
 2\. Clone `ubin-corda-deployment` repository
 
 ```sh
-$ git clone https://github.com/project-ubin/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/ubin-corda-deployment.git
 ```
 
 3\. Determine Notary node name (e.g. Notary)
@@ -85,11 +94,11 @@ $ sudo ./configure.sh networkmap <<VM Username>> <<Network Map Name>> nonValidat
 
    Example:
 ```sh
-# Notary name is "Notary"
+# Notary name is "Corda_Notary"
 # Network map IP address is "10.0.0.47"
-# VM username is "azureuser"
+# VM username is "corda"
 $ chmod +x configure.sh
-$ sudo ./configure.sh notary azureuser "Notary" nonValidating 10.0.0.47
+$ sudo ./configure.sh notary corda "Corda_Notary" nonValidating 10.0.0.47
 ```
 
 ### 3. Set Up Bank Nodes
@@ -99,7 +108,7 @@ $ sudo ./configure.sh notary azureuser "Notary" nonValidating 10.0.0.47
 2\. Clone `ubin-corda-deployment` repository
 
 ```sh
-$ git clone https://github.com/project-ubin/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/ubin-corda-deployment.git
 ```
 
 3\. Determine bank node name (usually the bank SWIFT code).
@@ -120,12 +129,12 @@ $ sudo ./configure.sh notary <<VM Username>> <<Notary Name>> nonValidating <<Net
 ```
    Example:
 ```sh
-# Nodename name is "BankA"
+# Nodename name is "Corda_BankA"
 # Network map IP address is "10.0.0.47"
-# VM username is "azureuser"
+# VM username is "corda"
 
 $ chmod +x configure.sh
-$ sudo ./configure.sh node azureuser "BankA" nonValidating 10.0.0.47
+$ sudo ./configure.sh node corda "Corda_BankA" nonValidating 10.0.0.47
 ```
 Note: do not name the Corda node with a name containing "node".
 
@@ -137,7 +146,7 @@ Note: do not name the Corda node with a name containing "node".
 
 1\. Copy CorDapp JARs into VM Node 0 into the following directory with SCP/FTP:
 ```sh
-/home/azureuser/ubin-corda-deployment/plugin
+/home/corda/ubin-corda-deployment/plugin
 ```
 2\. Log in to VM Node 0 using SSH
 3\. Go to `ubin-corda-deployment` directory
@@ -150,7 +159,7 @@ $ ./manage.sh deploy 0 12
 This step does the following:
 
 - Delete everything in /app/corda/plugins
-- Copy all files from Node 0's /home/azureuser/deploy to the target node's /app/corda/plugins folder
+- Copy all files from Node 0's /home/corda/deploy to the target node's /app/corda/plugins folder
 - Restart Corda and webserver in the node
 - Repeat for selected Nodes
 
@@ -176,7 +185,7 @@ Note: 0 and 12 in Step 3 represents the range of nodes. If you only require depl
 
 ## D. Clear All Data in Vault
 1\. Log in to VM Node 0 using SSH
-2\. Check that you are in `/home/azureuser`
+2\. Check that you are in `/home/corda`
 3\. Go to `ubin-corda-deployment`
 4\. Stop all Corda nodes (node 0 to 12) using:
 ```sh
