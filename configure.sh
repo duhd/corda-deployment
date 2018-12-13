@@ -33,9 +33,9 @@ CORDA_HOST=$(hostname -i)
 # CORDA PORT can be 10002 by default
 CORDA_PORT="10002"
 # City - we need to get it from user - or just assign randomly
-CORDA_CITY="Singapore"
+CORDA_CITY="Hanoi"
 # Country as above
-CORDA_COUNTRY="SG"
+CORDA_COUNTRY="VN"
 # Legal Name for Network Map
 CORDA_NETWORKMAP_LEGAL_NAME="Network Map"
 # Node Legal Name
@@ -138,7 +138,7 @@ Requires=network.target
 Type=simple
 User=$AZUREUSER
 WorkingDirectory=$WORKING_DIRECTORY
-ExecStart=/usr/bin/java -Xmx2048m -jar /app/corda/corda.jar
+ExecStart=/usr/bin/java -Xmx4096m -jar /app/corda/corda.jar
 Restart=on-failure
 
 [Install]
