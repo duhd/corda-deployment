@@ -1,4 +1,4 @@
-# Project Ubin Phase 2 - Corda Deployment
+# Project - Corda Deployment
 
 This is a repository for Project Ubin containing collection of scripts to set up a network and perform deployment for Corda workstream. 
 
@@ -7,7 +7,7 @@ This is a repository for Project Ubin containing collection of scripts to set up
 
 To get started, clone this repository with:
 ```sh
-$ git clone https://github.com/duhd/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/corda-deployment.git
 ```
 # Set Up New Network
 
@@ -35,7 +35,7 @@ You will need the following components set up/installed:
 2. Set up notary
 3. Set up bank nodes
 
-The script `configure.sh` from `ubin-corda-deployment` repository takes in 5 input parameters:
+The script `configure.sh` from `corda-deployment` repository takes in 5 input parameters:
 * Node type (value: networkmap, notary, node)
 * Virtual machine (VM) username
 * Network Map Name
@@ -46,9 +46,9 @@ The script `configure.sh` from `ubin-corda-deployment` repository takes in 5 inp
 
 1\. SSH to Network Map virtual machine.
 
-2\. Clone `ubin-corda-deployment` repository
+2\. Clone `corda-deployment` repository
 ```sh
-$ git clone https://github.com/duhd/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/corda-deployment.git
 ```
 3\. Determine network map node name (e.q. Network Map)
 
@@ -77,10 +77,10 @@ Note: Network map IP address is required in the set up of notary node and additi
 
 1\. SSH to Notary virtual machine.
 
-2\. Clone `ubin-corda-deployment` repository
+2\. Clone `corda-deployment` repository
 
 ```sh
-$ git clone https://github.com/duhd/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/corda-deployment.git
 ```
 
 3\. Determine Notary node name (e.g. Notary)
@@ -105,17 +105,17 @@ $ sudo ./configure.sh notary corda "Corda_Notary" nonValidating 10.0.0.47
 
 1\. SSH to bank nodes virtual machine.
 
-2\. Clone `ubin-corda-deployment` repository
+2\. Clone `corda-deployment` repository
 
 ```sh
-$ git clone https://github.com/duhd/ubin-corda-deployment.git
+$ git clone https://github.com/duhd/corda-deployment.git
 ```
 
 3\. Determine bank node name (usually the bank SWIFT code).
 
 4\. Get network map IP Address from the previous step (network map setup).
 
-5\. Go to `ubin-corda-deployment` directory.
+5\. Go to `corda-deployment` directory.
 
 6\. Verify `config.properties` to ensure `ApproveRedeemURI` is configured with the Central Bank domain name.
 ```sh
@@ -146,10 +146,10 @@ Note: do not name the Corda node with a name containing "node".
 
 1\. Copy CorDapp JARs into VM Node 0 into the following directory with SCP/FTP:
 ```sh
-/home/corda/ubin-corda-deployment/plugin
+/home/corda/corda-deployment/plugin
 ```
 2\. Log in to VM Node 0 using SSH
-3\. Go to `ubin-corda-deployment` directory
+3\. Go to `corda-deployment` directory
 
 4\. Execute manage.sh to deploy CorDapp to all nodes in the network except the Notary and the Network Map. The script assumes that the nodes are named sequentially (e.g. 0 to 12):
 ```sh
@@ -167,7 +167,7 @@ Note: 0 and 12 in Step 4 represents the range of nodes. If you only require depl
 
 ## B. Restart All Nodes
 1\. Log in to VM Node 0 using SSH
-2\. Go to `ubin-corda-deployment` directory
+2\. Go to `corda-deployment` directory
 3\. Execute `manage.sh` to restart all nodes in the network (e.g. Node 0 - Node 12):
 ```sh
 $ ./manage.sh restart 0 12
@@ -176,7 +176,7 @@ Note: 0 and 12 in Step 3 represents the range of nodes. If you only require depl
 
 ## C. Stop All Nodes
 1\. Log in to VM Node 0 using SSH
-2\. Go to `ubin-corda-deployment` directory
+2\. Go to `corda-deployment` directory
 3\. Execute `manage.sh` to stop all nodes in the network (e.g. Node 0 - Node 12):
 ```sh
 $ ./manage.sh stop 0 12
@@ -186,7 +186,7 @@ Note: 0 and 12 in Step 3 represents the range of nodes. If you only require depl
 ## D. Clear All Data in Vault
 1\. Log in to VM Node 0 using SSH
 2\. Check that you are in `/home/corda`
-3\. Go to `ubin-corda-deployment`
+3\. Go to `corda-deployment`
 4\. Stop all Corda nodes (node 0 to 12) using:
 ```sh
 $ ./manage.sh stop 0 12
@@ -213,7 +213,7 @@ $ vi node.conf
 ```
 4\. Change `myLegalName` in "O" key :
 ```sh
-"O=BOTKSGSX, L=Singapore, C=Singapore"
+"O=BANKA, L=Hanoi, C=Vietnam"
 ```
 5\. Delete the `certificates` folder. The certificates will be regenerated automatically upon Corda server start up
 6\. To purge the old entries in the Network Map, login to the h2 DB of the Network Map (nm0) and delete the old entries in `NODE_NETWORK_MAP_NODES` table
