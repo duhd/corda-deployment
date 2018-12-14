@@ -126,12 +126,6 @@ rpcSettings = {
 h2port : 10004
 webAddress : "0.0.0.0:10005"
 
-// Starts an internal SSH server providing a management shell on the node.
-sshdPort 2223
-
-extraConfig = [
-            jvmArgs : [ "-Xmx4g"]
-]
 
 myLegalName : "O=$CORDA_LEGAL_NAME, L=$CORDA_CITY, C=$CORDA_COUNTRY"
 keyStorePassword : "cordacadevpass"
