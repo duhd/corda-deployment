@@ -90,8 +90,8 @@ mkdir -p /app/corda/plugins
 mkdir -p /app/corda/certificates
 
 # Copy corda jar (for now use local dir rather then remote location)
-wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o /app/corda/corda.jar
-wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o /app/corda/corda-webserver.jar
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o /app/corda/corda.jar
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o /app/corda/corda-webserver.jar
 #cp config.properties /app/corda/config.properties
 
 # Get the network map trust store
