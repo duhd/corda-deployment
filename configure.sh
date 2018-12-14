@@ -90,15 +90,16 @@ mkdir -p /app/corda/plugins
 mkdir -p /app/corda/certificates
 
 # Copy corda jar (for now use local dir rather then remote location)
-curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o /app/corda/corda.jar
-curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o /app/corda/corda-webserver.jar
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o $WORKING_DIRECTORY/corda.jar
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o $WORKING_DIRECTORY/corda-webserver.jar
 #cp config.properties /app/corda/config.properties
 
 # Get the network map trust store
-curl -o /app/corda/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
+curl -o $WORKING_DIRECTORY/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
 
 # Initialise the node through the doorman
-java -jar /app/corda/corda.jar --initial-registration --network-root-truststore /app/corda/certificates/network-truststore.jks --network-root-truststore-password trustpass 
+cd $WORKING_DIRECTORY
+java -jar ./corda.jar --initial-registration --network-root-truststore ./certificates/network-truststore.jks --network-root-truststore-password trustpass 
 
 ########################
 # Create configuration #
@@ -164,7 +165,7 @@ Requires=network.target
 Type=simple
 User=$AZUREUSER
 WorkingDirectory=$WORKING_DIRECTORY
-ExecStart=/usr/bin/java -Xmx4096m -jar /app/corda/corda.jar
+ExecStart=/usr/bin/java -Xmx4096m -jar $WORKING_DIRECTORY/corda.jar
 Restart=on-failure
 
 [Install]
@@ -181,7 +182,7 @@ Requires=network.target
 Type=Simple
 User=$AZUREUSER
 WorkingDirectory=$WORKING_DIRECTORY
-ExecStart=/usr/bin/java -jar /app/corda/corda-webserver.jar
+ExecStart=/usr/bin/java -jar $WORKING_DIRECTORY/corda-webserver.jar
 Restart=on-failure
 
 [Install]
@@ -191,7 +192,7 @@ EOF
 ###############
 # Start Corda #
 ###############
-chown -R $AZUREUSER:$AZUREUSER /app/corda
+chown -R $AZUREUSER:$AZUREUSER $WORKING_DIRECTORY
 
 systemctl daemon-reload
 systemctl start corda
