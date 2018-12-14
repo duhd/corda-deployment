@@ -38,6 +38,8 @@ CORDA_CITY="Hanoi"
 CORDA_COUNTRY="VN"
 # Legal Name for Network Map
 CORDA_NETWORKMAP_LEGAL_NAME="Network Map"
+# Hostname Cordite Network Map
+CORDITE_NETWORKMAP_HOST="corda-networkmap.vnpay.vn"
 # Node Legal Name
 case  $NODE_TYPE in
     "notary")
@@ -68,16 +70,16 @@ if [ $NODE_TYPE == "networkmap" ]
 then
     CORDA_NETWORKMAP=""
 else
-    CORDA_NETWORKMAP="compatibilityZoneURL=\"https://corda-networkmap.vnpay.vn:8080\""
+    CORDA_NETWORKMAP="compatibilityZoneURL=\"https://$CORDITE_NETWORKMAP_HOST:8080\""
 fi
 #############################
 #  INSTALL REQUIRE SOFTWARE #
 #############################
 # Install ntp and OpenJDK from zulu.org
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
-echo "deb http://repos.azulsystems.com/ubuntu stable main" >> /etc/apt/sources.list.d/zulu.list
-apt-get -y update
-apt-get -qqy install zulu-8 ntp
+#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
+#echo "deb http://repos.azulsystems.com/ubuntu stable main" >> /etc/apt/sources.list.d/zulu.list
+#apt-get -y update
+#apt-get -qqy install zulu-8 ntp
 
 # Cleanup Optional
 #apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -85,13 +87,19 @@ apt-get -qqy install zulu-8 ntp
 # Create /app/corda directory
 mkdir -p /app/corda/logs
 mkdir -p /app/corda/plugins
+mkdir -p /app/corda/certificates
 
 # Copy corda jar (for now use local dir rather then remote location)
-#cp lib/corda-webserver.jar /app/corda/corda-webserver.jar
 wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o /app/corda/corda.jar
 wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o /app/corda/corda-webserver.jar
-cp lib/corda.jar /app/corda/corda.jar
 #cp config.properties /app/corda/config.properties
+
+# Get the network map trust store
+curl -o /app/corda/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
+
+# Initialise the node through the doorman
+java -jar /app/corda/corda.jar --initial-registration --network-root-truststore /app/corda/certificates/network-truststore.jks --network-root-truststore-password trustpass 
+
 ########################
 # Create configuration #
 ########################
@@ -99,7 +107,14 @@ cp lib/corda.jar /app/corda/corda.jar
 # Corda configuration
 
 cat > /app/corda/node.conf << EOF
+emailAddress : "duhd@vnpay.vn"
 basedir : "/app/corda"
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:"${basedir}"/persistence"
+    "dataSource.user" : sa
+    "dataSource.password" : ""
+}
 p2pAddress : "$CORDA_HOST:$CORDA_PORT"
 rpcSettings = {
     useSsl = false
@@ -109,6 +124,14 @@ rpcSettings = {
 }
 h2port : 10004
 webAddress : "0.0.0.0:10005"
+
+// Starts an internal SSH server providing a management shell on the node.
+sshdPort 2223
+
+extraConfig = [
+            jvmArgs : [ "-Xmx4g"]
+]
+
 myLegalName : "O=$CORDA_LEGAL_NAME, L=$CORDA_CITY, C=$CORDA_COUNTRY"
 keyStorePassword : "cordacadevpass"
 trustStorePassword : "trustpass"
@@ -123,6 +146,11 @@ rpcUsers=[
         ]
     }
 ]
+flowTimeout {
+    timeout = 30 seconds
+    maxRestartCount = 5
+    backoffBase = 1.8
+}
 $CORDA_NETWORKMAP
 EOF
 
