@@ -68,13 +68,7 @@ if [ $NODE_TYPE == "networkmap" ]
 then
     CORDA_NETWORKMAP=""
 else
-    CORDA_NETWORKMAP=$(cat <<EOM
-networkMapService : {
-    address="$NETWORKMAP_ADDRESS:10002"
-    legalName="O=$CORDA_NETWORKMAP_LEGAL_NAME, L=$CORDA_CITY, C=$CORDA_COUNTRY"
-}
-EOM
-  )
+    CORDA_NETWORKMAP="compatibilityZoneURL=\"https://corda-networkmap.vnpay.vn:8080\""
 fi
 #############################
 #  INSTALL REQUIRE SOFTWARE #
@@ -93,9 +87,11 @@ mkdir -p /app/corda/logs
 mkdir -p /app/corda/plugins
 
 # Copy corda jar (for now use local dir rather then remote location)
-cp lib/corda-webserver.jar /app/corda/corda-webserver.jar
+#cp lib/corda-webserver.jar /app/corda/corda-webserver.jar
+wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o /app/corda/corda.jar
+wget https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o /app/corda/corda-webserver.jar
 cp lib/corda.jar /app/corda/corda.jar
-cp config.properties /app/corda/config.properties
+#cp config.properties /app/corda/config.properties
 ########################
 # Create configuration #
 ########################
@@ -105,23 +101,25 @@ cp config.properties /app/corda/config.properties
 cat > /app/corda/node.conf << EOF
 basedir : "/app/corda"
 p2pAddress : "$CORDA_HOST:$CORDA_PORT"
-rpcAddress : "$CORDA_HOST:10003"
-webAddress : "0.0.0.0:10004"
-h2port : 11000
+rpcSettings = {
+    useSsl = false
+    standAloneBroker = false
+    address : "$CORDA_HOST:10003"
+    adminAddress : "$CORDA_HOST:10023"
+}
+h2port : 10004
+webAddress : "0.0.0.0:10005"
 myLegalName : "O=$CORDA_LEGAL_NAME, L=$CORDA_CITY, C=$CORDA_COUNTRY"
 keyStorePassword : "cordacadevpass"
 trustStorePassword : "trustpass"
 extraAdvertisedServiceIds: [ "$CORDA_NOTARY" ]
 useHTTPS : false
-devMode : true
+devMode : false
 rpcUsers=[
     {
         user=corda
         password=not_blockchain
-        permissions=[
-            StartFlow.net.corda.flows.CashIssueFlow,
-            StartFlow.net.corda.flows.CashExitFlow,
-            StartFlow.net.corda.flows.CashPaymentFlow
+        permissions=[ALL
         ]
     }
 ]
