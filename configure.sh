@@ -111,7 +111,7 @@ emailAddress : "duhd@vnpay.vn"
 basedir : "$WORKING_DIRECTORY"
 dataSourceProperties : {
     dataSourceClassName : org.h2.jdbcx.JdbcDataSource
-    "dataSource.url" : "jdbc:h2:file:"${basedir}"/persistence"
+    "dataSource.url" : "jdbc:h2:file:$WORKING_DIRECTORY/persistence"
     "dataSource.user" : sa
     "dataSource.password" : ""
 }
