@@ -89,17 +89,6 @@ mkdir -p /app/corda/logs
 mkdir -p /app/corda/plugins
 mkdir -p /app/corda/certificates
 
-# Copy corda jar (for now use local dir rather then remote location)
-curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o $WORKING_DIRECTORY/corda.jar
-curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o $WORKING_DIRECTORY/corda-webserver.jar
-#cp config.properties /app/corda/config.properties
-
-# Get the network map trust store
-curl -o $WORKING_DIRECTORY/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
-
-# Initialise the node through the doorman
-GET_TRUSTSTORE=(`cd $WORKING_DIRECTORY;/usr/bin/java -jar ./corda.jar --initial-registration --network-root-truststore ./certificates/network-truststore.jks --network-root-truststore-password trustpass`)
-
 ########################
 # Create configuration #
 ########################
@@ -147,6 +136,18 @@ flowTimeout {
 }
 $CORDA_NETWORKMAP
 EOF
+
+# Copy corda jar (for now use local dir rather then remote location)
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/3.2-corda/corda-3.2-corda.jar -o $WORKING_DIRECTORY/corda.jar
+curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-webserver/3.2-corda/corda-webserver-3.2-corda.jar -o $WORKING_DIRECTORY/corda-webserver.jar
+#cp config.properties /app/corda/config.properties
+
+# Get the network map trust store
+curl -o $WORKING_DIRECTORY/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
+
+# Initialise the node through the doorman
+`cd $WORKING_DIRECTORY;/usr/bin/java -jar ./corda.jar --initial-registration --network-root-truststore ./certificates/network-truststore.jks --network-root-truststore-password trustpass`
+
 
 # Configure SystemD for Corda
 cat > /etc/systemd/system/corda.service <<EOF
