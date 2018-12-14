@@ -6,7 +6,7 @@ set -x
 # READ PARAMETERS #
 ###################
 # Validate that all arguments are supplied
-if [ $# -lt 5 ]
+if [ $# -lt 4 ]
 then
     echo "Insufficient parameters supplied."
     echo "Provided only: $*"
@@ -18,7 +18,7 @@ NODE_TYPE=$1 # in use CORDA_LEGAL_NAME, CORDA_NOTARY
 AZUREUSER=$2 # in use in config files
 NODE_NAME=$3 # in use in CORDA_LEGAL_NAME
 NOTARY_TYPE=$4 # in use in CORDA_NOTARY
-NETWORKMAP_ADDRESS=$5 # in use in CORDA_NETWORKMAP
+#NETWORKMAP_ADDRESS=$5 # in use in CORDA_NETWORKMAP
 WORKING_DIRECTORY="/app/corda"
 
 if [ ! -d $WORKING_DIRECTORY ]; then
