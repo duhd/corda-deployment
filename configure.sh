@@ -98,7 +98,7 @@ curl https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda-we
 curl -o $WORKING_DIRECTORY/certificates/network-truststore.jks https://$CORDITE_NETWORKMAP_HOST:8080//network-map/truststore
 
 # Initialise the node through the doorman
-cd $WORKING_DIRECTORY;/usr/bin/java -jar ./corda.jar --initial-registration --network-root-truststore ./certificates/network-truststore.jks --network-root-truststore-password trustpass
+GET_TRUSTSTORE=(`cd $WORKING_DIRECTORY;/usr/bin/java -jar ./corda.jar --initial-registration --network-root-truststore ./certificates/network-truststore.jks --network-root-truststore-password trustpass`)
 
 ########################
 # Create configuration #
