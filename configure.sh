@@ -108,7 +108,7 @@ java -jar /app/corda/corda.jar --initial-registration --network-root-truststore 
 
 cat > /app/corda/node.conf << EOF
 emailAddress : "duhd@vnpay.vn"
-basedir : "/app/corda"
+basedir : "$WORKING_DIRECTORY"
 dataSourceProperties : {
     dataSourceClassName : org.h2.jdbcx.JdbcDataSource
     "dataSource.url" : "jdbc:h2:file:"${basedir}"/persistence"
