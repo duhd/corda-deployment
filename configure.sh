@@ -113,7 +113,9 @@ rpcSettings = {
 }
 h2port : 10004
 webAddress : "0.0.0.0:10005"
-
+sshd {
+    port = 2223
+}
 
 myLegalName : "O=$CORDA_LEGAL_NAME, L=$CORDA_CITY, C=$CORDA_COUNTRY"
 keyStorePassword : "cordacadevpass"
@@ -135,6 +137,7 @@ flowTimeout {
     backoffBase = 1.8
 }
 $CORDA_NETWORKMAP
+autoAcceptEnabled : true
 EOF
 
 # Copy corda jar (for now use local dir rather then remote location)
