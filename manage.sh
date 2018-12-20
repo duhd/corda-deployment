@@ -4,12 +4,12 @@ echo "Mode: $1"
 echo "Range of nodes: $2 to $3"
 echo "--------------"
 
-username='username'
-host_prefix='cordavm'
-host_suffix='.example.com'
-notary_host='notary.example.com'
-networkmap_host='networkmap.example.com'
-nm_db_url='jdbc:h2:tcp://networkmap.example.com:11000/node'
+username='corda'
+host_prefix='corda-'
+host_suffix='.vnpay.vn'
+notary_host='corda-notary.vnpay.vn'
+networkmap_host='corda-networkmap.vnpay.vn'
+nm_db_url='jdbc:h2:tcp://corda-networkmap.vnpay.vn:10004/node'
 nm_db_user='sa'
 
 networkmap=$username'@'$networkmap_host
