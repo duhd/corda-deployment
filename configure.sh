@@ -56,10 +56,10 @@ if [ $NODE_TYPE == "notary" ]
 then
     if [ $NOTARY_TYPE == "validating" ]
     then
-        CORDA_NOTARY="corda.notary.validating"
+        CORDA_NOTARY="notary { validating=true }"
     elif [ $NOTARY_TYPE == "nonValidating" ]
     then
-        CORDA_NOTARY="corda.notary.simple"
+        CORDA_NOTARY="notary { validating=false }"
     fi
 else
     CORDA_NOTARY=""
