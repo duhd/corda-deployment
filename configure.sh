@@ -39,7 +39,7 @@ CORDA_COUNTRY="VN"
 # Legal Name for Network Map
 CORDA_NETWORKMAP_LEGAL_NAME="Network Map"
 # Hostname Cordite Network Map
-CORDITE_NETWORKMAP_HOST="corda-networkmap.vnpay.vn"
+CORDITE_NETWORKMAP_HOST="corda-nms.vnpay.vn"
 # Node Legal Name
 case  $NODE_TYPE in
     "notary")
