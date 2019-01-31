@@ -192,5 +192,5 @@ EOF
 chown -R $AZUREUSER:$AZUREUSER $WORKING_DIRECTORY
 
 systemctl daemon-reload
-systemctl start corda
-systemctl start corda-webserver
+#systemctl start corda
+#systemctl start corda-webserver
