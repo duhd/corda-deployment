@@ -77,12 +77,13 @@ fi
 #############################
 # Install ntp and OpenJDK from zulu.org
 #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
-#echo "deb http://repos.azulsystems.com/ubuntu stable main" >> /etc/apt/sources.list.d/zulu.list
-#apt-get -y update
-#apt-get -qqy install zulu-8 ntp
+curl -sSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | sudo apt-key add -
+echo "deb http://repos.azulsystems.com/ubuntu stable main" >> /etc/apt/sources.list.d/zulu.list
+apt-get -y update
+apt-get -qqy install zulu-8 ntp
 
 # Cleanup Optional
-#apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create /app/corda directory
 mkdir -p /app/corda/logs
