@@ -1,4 +1,4 @@
-# Project - Corda Deployment
+# Project - Corda Deployment Test
 
 This is a repository for Project Ubin containing collection of scripts to set up a network and perform deployment for Corda workstream. 
 
